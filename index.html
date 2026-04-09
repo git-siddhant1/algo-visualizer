@@ -55,6 +55,7 @@ body{
 ::-webkit-scrollbar-track{background:var(--bg2);}
 ::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px;}
 
+/* Enhanced gradient background */
 body::before{
   content:'';
   position:fixed;inset:0;
@@ -62,6 +63,15 @@ body::before{
     linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),
     linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);
   background-size:40px 40px;
+  pointer-events:none;z-index:0;
+}
+/* Soft radial gradient overlay for depth */
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background: radial-gradient(ellipse at 20% 50%, rgba(91,141,255,0.04) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 20%, rgba(255,107,107,0.03) 0%, transparent 50%),
+              radial-gradient(ellipse at 60% 80%, rgba(54,211,153,0.03) 0%, transparent 50%);
   pointer-events:none;z-index:0;
 }
 
@@ -103,14 +113,25 @@ body::before{
 .nav-tab{
   padding:7px 16px;border-radius:7px;border:none;background:transparent;
   font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;
-  color:var(--text2);cursor:pointer;transition:all .2s;white-space:nowrap;
+  color:var(--text2);cursor:pointer;
+  transition:all .25s cubic-bezier(0.34,1.2,0.64,1);
+  white-space:nowrap;position:relative;
 }
-.nav-tab:hover{color:var(--text);background:var(--surface);}
+.nav-tab:hover{color:var(--text);background:var(--surface);transform:translateY(-1px);}
 .nav-tab.active{background:var(--surface2);color:var(--text);}
 .nav-tab.active[data-mod="1"]{color:var(--m1);}
 .nav-tab.active[data-mod="2"]{color:var(--m2);}
 .nav-tab.active[data-mod="3"]{color:var(--m3);}
 .nav-tab.active[data-mod="4"]{color:var(--m4);}
+
+/* Active tab underline glow */
+.nav-tab.active::after{
+  content:'';position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);
+  width:60%;height:2px;border-radius:2px;
+  background:currentColor;
+  box-shadow:0 0 8px currentColor;
+  opacity:0.7;
+}
 
 .nav-badge{
   font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;
@@ -162,43 +183,50 @@ body::before{
 }
 .select:hover{border-color:var(--border2);}
 
+/* Enhanced button with micro-interactions */
 .btn{
   width:100%;padding:12px;border-radius:var(--r2);border:none;
   font-family:'Syne',sans-serif;font-size:14px;font-weight:700;
-  cursor:pointer;transition:all .22s;letter-spacing:.3px;
+  cursor:pointer;transition:all .22s cubic-bezier(0.34,1.3,0.64,1);letter-spacing:.3px;
   position:relative;overflow:hidden;
 }
+.btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.08),transparent);
+  opacity:0;transition:opacity .2s;
+}
+.btn:hover::before{opacity:1;}
 .btn::after{
   content:'';position:absolute;inset:0;background:rgba(255,255,255,0);
   transition:background .18s;
 }
 .btn:active::after{background:rgba(255,255,255,0.1);}
 .btn-m1{background:var(--m1);color:#fff;}
-.btn-m1:hover{background:var(--m1b);box-shadow:0 8px 24px rgba(91,141,255,0.35);transform:translateY(-1px);}
+.btn-m1:hover{background:var(--m1b);box-shadow:0 8px 24px rgba(91,141,255,0.35);transform:translateY(-2px);}
 .btn-m2{background:var(--m2);color:#fff;}
-.btn-m2:hover{background:var(--m2b);box-shadow:0 8px 24px rgba(255,107,107,0.35);transform:translateY(-1px);}
+.btn-m2:hover{background:var(--m2b);box-shadow:0 8px 24px rgba(255,107,107,0.35);transform:translateY(-2px);}
 .btn-m3{background:var(--m3);color:#07080f;}
-.btn-m3:hover{background:var(--m3b);box-shadow:0 8px 24px rgba(54,211,153,0.35);transform:translateY(-1px);}
+.btn-m3:hover{background:var(--m3b);box-shadow:0 8px 24px rgba(54,211,153,0.35);transform:translateY(-2px);}
 .btn-m4{background:var(--m4);color:#07080f;}
-.btn-m4:hover{background:var(--m4b);box-shadow:0 8px 24px rgba(244,196,48,0.35);transform:translateY(-1px);}
+.btn-m4:hover{background:var(--m4b);box-shadow:0 8px 24px rgba(244,196,48,0.35);transform:translateY(-2px);}
 .btn-ghost{background:var(--surface);border:1px solid var(--border);color:var(--text2);}
-.btn-ghost:hover{background:var(--surface2);color:var(--text);border-color:var(--border2);transform:translateY(-1px);}
+.btn-ghost:hover{background:var(--surface2);color:var(--text);border-color:var(--border2);transform:translateY(-2px);}
 .btn:active{transform:translateY(0) !important;}
 
 /* Cards */
 .card{
   background:var(--surface);border:1px solid var(--border);
   border-radius:var(--r);padding:22px;
-  transition:border-color .2s, box-shadow .25s;
+  transition:border-color .2s, box-shadow .25s, transform .2s;
 }
 .card.m1{border-color:rgba(91,141,255,0.2);}
 .card.m2{border-color:rgba(255,107,107,0.2);}
 .card.m3{border-color:rgba(54,211,153,0.2);}
 .card.m4{border-color:rgba(244,196,48,0.2);}
-.card.m1:hover{box-shadow:0 0 20px rgba(91,141,255,0.06);}
-.card.m2:hover{box-shadow:0 0 20px rgba(255,107,107,0.06);}
-.card.m3:hover{box-shadow:0 0 20px rgba(54,211,153,0.06);}
-.card.m4:hover{box-shadow:0 0 20px rgba(244,196,48,0.06);}
+.card.m1:hover{box-shadow:0 0 30px rgba(91,141,255,0.08);}
+.card.m2:hover{box-shadow:0 0 30px rgba(255,107,107,0.08);}
+.card.m3:hover{box-shadow:0 0 30px rgba(54,211,153,0.08);}
+.card.m4:hover{box-shadow:0 0 30px rgba(244,196,48,0.08);}
 
 .tag{
   display:inline-block;padding:3px 10px;border-radius:4px;
@@ -238,9 +266,9 @@ body::before{
 .stat-box{
   background:var(--bg3);border:1px solid var(--border);
   border-radius:var(--r2);padding:14px 16px;text-align:center;
-  transition:border-color .2s, transform .2s;
+  transition:border-color .2s, transform .2s, box-shadow .2s;
 }
-.stat-box:hover{border-color:var(--border2);transform:translateY(-1px);}
+.stat-box:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,0.3);}
 .stat-val{
   font-family:'Syne',sans-serif;font-size:26px;font-weight:800;
   letter-spacing:-1px;display:block;margin-bottom:2px;
@@ -292,13 +320,13 @@ body::before{
 .module-card{
   background:var(--surface);border:1px solid var(--border);
   border-radius:var(--r);padding:24px 20px;
-  cursor:pointer;transition:all .28s;position:relative;overflow:hidden;
+  cursor:pointer;transition:all .3s cubic-bezier(0.34,1.2,0.64,1);position:relative;overflow:hidden;
 }
 .module-card::before{
   content:'';position:absolute;inset:0;border-radius:var(--r);
   opacity:0;transition:opacity .3s;
 }
-.module-card:hover{transform:translateY(-5px);}
+.module-card:hover{transform:translateY(-6px);}
 .module-card:hover::before{opacity:1;}
 .mc1::before{background:linear-gradient(135deg,var(--m1glow),transparent);}
 .mc2::before{background:linear-gradient(135deg,var(--m2glow),transparent);}
@@ -313,8 +341,8 @@ body::before{
   font-family:'Space Mono',monospace;font-size:11px;font-weight:700;
   letter-spacing:1px;opacity:.5;margin-bottom:12px;display:block;
 }
-.mc-icon{font-size:32px;margin-bottom:14px;display:block;transition:transform .3s;}
-.module-card:hover .mc-icon{transform:scale(1.15) rotate(-5deg);}
+.mc-icon{font-size:32px;margin-bottom:14px;display:block;transition:transform .3s cubic-bezier(0.34,1.5,0.64,1);}
+.module-card:hover .mc-icon{transform:scale(1.2) rotate(-8deg);}
 .mc-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:6px;}
 .mc-desc{font-size:12px;line-height:1.6;color:var(--text2);}
 .mc-tag{margin-top:14px;}
@@ -332,7 +360,7 @@ body::before{
 .step-row{
   display:flex;gap:12px;align-items:flex-start;
   padding:14px 0;border-bottom:1px solid var(--border);
-  transition:background .2s;border-radius:6px;
+  transition:background .2s, padding-left .2s;border-radius:6px;
 }
 .step-row:last-child{border-bottom:none;}
 .step-row:hover{background:rgba(255,255,255,0.02);padding-left:6px;}
@@ -356,7 +384,6 @@ body::before{
 }
 .tree-canvas svg{display:block;}
 
-/* SVG tree node animations */
 @keyframes nodeAppear{
   from{opacity:0;transform:scale(0.4);}
   to{opacity:1;transform:scale(1);}
@@ -371,7 +398,6 @@ body::before{
   animation:lineGrow .3s ease both;
 }
 
-/* Cost annotation pulse */
 @keyframes costFadeIn{from{opacity:0;transform:translateX(6px);}to{opacity:1;transform:translateX(0);}}
 .tree-cost-label{animation:costFadeIn .35s ease both;}
 
@@ -397,37 +423,94 @@ body::before{
 .three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:0;}
 
 /* ═══════════════════════════════════════
+   STEP EXPLANATION PANEL (NEW)
+═══════════════════════════════════════ */
+.step-panel{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--r2);padding:14px 18px;
+  margin-bottom:16px;
+  display:flex;align-items:flex-start;gap:12px;
+  min-height:56px;
+  transition:border-color .3s, background .3s;
+  animation:fadeSlide .2s ease;
+}
+.step-panel.info{border-color:rgba(91,141,255,0.3);background:rgba(91,141,255,0.05);}
+.step-panel.compare{border-color:rgba(255,255,255,0.25);background:rgba(255,255,255,0.04);}
+.step-panel.merge{border-color:rgba(54,211,153,0.3);background:rgba(54,211,153,0.05);}
+.step-panel.resize{border-color:rgba(255,107,107,0.4);background:rgba(255,107,107,0.07);}
+.step-panel.done{border-color:rgba(54,211,153,0.4);background:rgba(54,211,153,0.07);}
+.step-panel-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.step-panel-body{}
+.step-panel-title{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:3px;}
+.step-panel-text{font-size:13px;line-height:1.5;color:var(--text);}
+.step-panel-text .hi{color:var(--m1b);}
+.step-panel-text .hi-green{color:var(--m3b);}
+.step-panel-text .hi-red{color:var(--m2b);}
+.step-panel-text .hi-yellow{color:var(--m4b);}
+
+/* ═══════════════════════════════════════
+   SUMMARY PANEL (NEW)
+═══════════════════════════════════════ */
+.summary-panel{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--r);padding:20px;
+  margin-top:16px;
+  animation:fadeSlide .3s ease;
+}
+.summary-panel-title{
+  font-family:'Syne',sans-serif;font-size:14px;font-weight:700;
+  margin-bottom:14px;display:flex;align-items:center;gap:8px;
+}
+.summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.summary-item{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r2);padding:12px 14px;
+  transition:border-color .2s, transform .2s;
+}
+.summary-item:hover{border-color:var(--border2);transform:translateY(-1px);}
+.summary-item-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;font-weight:700;}
+.summary-item-val{font-family:'Space Mono',monospace;font-size:15px;font-weight:700;color:var(--text);}
+
+/* ═══════════════════════════════════════
    MODULE 2: SORTING BENCHMARK
 ═══════════════════════════════════════ */
+.sort-controls{display:flex;gap:6px;margin-bottom:0;}
+
 .sort-viz-container{
   background:var(--bg3);border:1px solid var(--border);
   border-radius:var(--r);padding:20px 20px 8px;
   min-height:200px;display:flex;align-items:flex-end;
   gap:2px;overflow:hidden;
+  transition:border-color .3s;
 }
+.sort-viz-container.sorting{border-color:rgba(255,107,107,0.3);}
+.sort-viz-container.sorted{border-color:rgba(54,211,153,0.3);}
 
-/* Enhanced bar transitions */
+/* Smooth bar transitions */
 .sort-bar{
   flex:1;border-radius:3px 3px 0 0;
-  transition:height .08s ease, background .12s ease, box-shadow .12s ease;
+  transition:height .12s cubic-bezier(0.34,1.2,0.64,1), background .1s ease, box-shadow .1s ease;
   min-width:2px;
   will-change:height,background;
 }
-.bar-normal{background:rgba(255,107,107,0.65);}
+.bar-normal{background:rgba(255,107,107,0.6);}
 .bar-comparing{
   background:#fff !important;
-  box-shadow:0 0 12px rgba(255,255,255,0.6), 0 0 4px rgba(255,255,255,0.9) !important;
+  box-shadow:0 0 14px rgba(255,255,255,0.7), 0 0 5px rgba(255,255,255,0.95) !important;
+  transition:height .06s ease !important;
 }
 .bar-sorted{background:rgba(54,211,153,0.75) !important;}
 .bar-pivot{background:var(--m4) !important;box-shadow:0 0 10px rgba(244,196,48,0.5) !important;}
 
-/* Comparison flash animation */
-@keyframes compareFlash{
-  0%{filter:brightness(1);}
-  50%{filter:brightness(1.6);}
-  100%{filter:brightness(1);}
+/* Pause indicator overlay */
+.sort-paused-overlay{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:rgba(7,8,15,0.85);border:1px solid var(--border2);
+  border-radius:var(--r2);padding:10px 20px;
+  font-family:'Space Mono',monospace;font-size:12px;color:var(--text2);
+  pointer-events:none;opacity:0;transition:opacity .2s;
 }
-.bar-comparing-flash{animation:compareFlash .15s ease;}
+.sort-paused-overlay.visible{opacity:1;}
 
 .chart-canvas{
   width:100%;height:220px;
@@ -444,7 +527,7 @@ canvas.chart{width:100%;height:100%;display:block;}
 .bench-table .highlight{color:var(--m2);font-weight:700;}
 
 /* ═══════════════════════════════════════
-   MODULE 3: MATRIX COMPARATOR — ENHANCED
+   MODULE 3: MATRIX COMPARATOR
 ═══════════════════════════════════════ */
 .matrix-vis{
   display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;
@@ -460,15 +543,9 @@ canvas.chart{width:100%;height:100%;display:block;}
   display:flex;align-items:center;justify-content:center;
   font-family:'Space Mono',monospace;font-size:10px;font-weight:700;
   background:var(--surface2);color:var(--text2);
-  transition:all .2s ease;
+  transition:all .18s cubic-bezier(0.34,1.2,0.64,1);
   position:relative;overflow:hidden;
 }
-.matrix-cell::before{
-  content:'';position:absolute;inset:0;
-  background:rgba(255,255,255,0);
-  transition:background .15s;
-}
-/* Row highlight */
 .matrix-cell.row-highlight{
   background:rgba(91,141,255,0.18) !important;
   color:var(--m1b) !important;
@@ -476,7 +553,6 @@ canvas.chart{width:100%;height:100%;display:block;}
   transform:scale(1.05);
   box-shadow:0 0 8px rgba(91,141,255,0.25);
 }
-/* Column highlight */
 .matrix-cell.col-highlight{
   background:rgba(255,107,107,0.18) !important;
   color:var(--m2b) !important;
@@ -484,7 +560,6 @@ canvas.chart{width:100%;height:100%;display:block;}
   transform:scale(1.05);
   box-shadow:0 0 8px rgba(255,107,107,0.25);
 }
-/* Active (both row and col match — the dot product cell) */
 .matrix-cell.dot-active{
   background:rgba(244,196,48,0.25) !important;
   color:var(--m4) !important;
@@ -502,7 +577,6 @@ canvas.chart{width:100%;height:100%;display:block;}
   100%{transform:scale(1);background:rgba(54,211,153,0.12);}
 }
 
-/* Result cell reveal */
 @keyframes resultReveal{
   0%{transform:scale(0.6);opacity:0;background:rgba(54,211,153,0.5);}
   60%{transform:scale(1.15);opacity:1;}
@@ -520,7 +594,6 @@ canvas.chart{width:100%;height:100%;display:block;}
   letter-spacing:-2px;
 }
 
-/* Step indicator for matrix */
 #matStepInfo{
   font-family:'Space Mono',monospace;font-size:11px;
   color:var(--text3);text-align:center;
@@ -529,13 +602,14 @@ canvas.chart{width:100%;height:100%;display:block;}
 }
 
 /* ═══════════════════════════════════════
-   MODULE 4: AMORTIZED — ENHANCED
+   MODULE 4: AMORTIZED
 ═══════════════════════════════════════ */
 .array-display{
   display:flex;gap:4px;flex-wrap:wrap;
   background:var(--bg3);border:1px solid var(--border);
   border-radius:var(--r);padding:16px;min-height:80px;
   align-items:center;
+  transition:border-color .3s, box-shadow .3s;
 }
 .array-cell{
   width:36px;height:36px;border-radius:6px;
@@ -544,19 +618,16 @@ canvas.chart{width:100%;height:100%;display:block;}
   transition:all .25s cubic-bezier(0.34,1.56,0.64,1);
   position:relative;
 }
-/* Normal filled */
 .cell-full{
   background:rgba(244,196,48,0.18);
   border:1px solid rgba(244,196,48,0.35);
   color:var(--m4b);
 }
-/* Empty slot */
 .cell-empty{
   background:var(--surface2);
   border:1px dashed rgba(255,255,255,0.1);
   color:var(--text3);
 }
-/* Newly inserted element */
 .cell-new{
   background:rgba(54,211,153,0.3);
   border:1px solid rgba(54,211,153,0.6);
@@ -569,7 +640,6 @@ canvas.chart{width:100%;height:100%;display:block;}
   60%{transform:scale(1.2);}
   100%{transform:scale(1);opacity:1;}
 }
-/* Cells being copied during resize */
 .cell-resize{
   background:rgba(255,107,107,0.25);
   border:1px solid rgba(255,107,107,0.5);
@@ -580,7 +650,6 @@ canvas.chart{width:100%;height:100%;display:block;}
   0%{transform:scale(1.1);box-shadow:0 0 14px rgba(255,107,107,0.5);}
   100%{transform:scale(1);box-shadow:none;}
 }
-/* Resize flash — whole container shakes subtly */
 @keyframes resizeShake{
   0%,100%{transform:translateX(0);}
   20%{transform:translateX(-3px);}
@@ -594,7 +663,6 @@ canvas.chart{width:100%;height:100%;display:block;}
   animation:resizeShake .35s ease;
 }
 
-/* New capacity badge that appears on resize */
 .cap-badge{
   display:inline-flex;align-items:center;gap:6px;
   background:rgba(255,107,107,0.15);border:1px solid rgba(255,107,107,0.3);
@@ -628,11 +696,6 @@ canvas.chart{width:100%;height:100%;display:block;}
   border-radius:var(--r);padding:16px;position:relative;height:160px;
   overflow:hidden;
 }
-.avg-line{
-  position:absolute;bottom:16px;left:16px;right:16px;
-  height:1px;background:var(--border2);
-}
-.avg-label{position:absolute;bottom:0;left:16px;font-size:10px;color:var(--text3);font-family:'Space Mono',monospace;}
 svg.avg-svg{position:absolute;inset:0;width:100%;height:100%;}
 
 /* ═══════════════════════════════════════
@@ -668,6 +731,7 @@ svg.avg-svg{position:absolute;inset:0;width:100%;height:100%;}
   .three-col{grid-template-columns:1fr;}
   .matrix-vis{grid-template-columns:1fr;}
   .home-hero{padding:40px 24px;}
+  .summary-grid{grid-template-columns:1fr 1fr;}
 }
 </style>
 </head>
@@ -691,7 +755,7 @@ svg.avg-svg{position:absolute;inset:0;width:100%;height:100%;}
     <button class="nav-tab" data-page="m3" data-mod="3" onclick="navigate('m3')">③ Matrix</button>
     <button class="nav-tab" data-page="m4" data-mod="4" onclick="navigate('m4')">④ Amortized</button>
   </div>
-  <div class="nav-badge">v1.1</div>
+  <div class="nav-badge">v1.2</div>
 </nav>
 
 <!-- ═══════════ HOME PAGE ═══════════ -->
@@ -720,8 +784,8 @@ svg.avg-svg{position:absolute;inset:0;width:100%;height:100%;}
         <span class="mc-num">MODULE 02</span>
         <span class="mc-icon">📊</span>
         <div class="mc-title">Sorting Benchmark</div>
-        <div class="mc-desc">Watch Merge Sort run on growing arrays. Plot real wall-clock time vs theoretical curve.</div>
-        <div class="mc-tag"><span class="tag tag-m2">Live Timing</span></div>
+        <div class="mc-desc">Watch Merge Sort run on growing arrays. Play, pause, step — plot real wall-clock time vs theory.</div>
+        <div class="mc-tag"><span class="tag tag-m2">Play/Pause/Step</span></div>
       </div>
       <div class="module-card mc3" onclick="navigate('m3')">
         <span class="mc-num">MODULE 03</span>
@@ -813,6 +877,15 @@ svg.avg-svg{position:absolute;inset:0;width:100%;height:100%;}
         </div>
       </div>
 
+      <!-- Step panel for Recurrence -->
+      <div id="recStepPanel" class="step-panel info mb-4">
+        <div class="step-panel-icon">🌳</div>
+        <div class="step-panel-body">
+          <div class="step-panel-title">How it works</div>
+          <div class="step-panel-text" id="recStepText">Select a recurrence and click <span class="hi">Solve All Methods</span> to see step-by-step solutions across all three techniques.</div>
+        </div>
+      </div>
+
       <div class="method-tabs">
         <button class="method-tab active" onclick="showMethod('master',this)">Master Method</button>
         <button class="method-tab" onclick="showMethod('tree',this)">Recurrence Tree</button>
@@ -860,6 +933,14 @@ svg.avg-svg{position:absolute;inset:0;width:100%;height:100%;}
       <div class="method-content" id="method-all">
         <div class="three-col" id="allMethods"></div>
       </div>
+
+      <!-- Summary Panel for Recurrence -->
+      <div id="recSummary" style="display:none;" class="mt-4">
+        <div class="summary-panel">
+          <div class="summary-panel-title"><span style="color:var(--m1);">📊</span> Analysis Summary</div>
+          <div class="summary-grid" id="recSummaryGrid"></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -882,12 +963,12 @@ svg.avg-svg{position:absolute;inset:0;width:100%;height:100%;}
 
       <div class="sidebar-section">
         <label class="sidebar-label">Animation Speed</label>
-        <select class="select" id="sortSpeed">
-          <option value="200">Slow</option>
-          <option value="60" selected>Medium</option>
-          <option value="15">Fast</option>
-          <option value="2">Lightning</option>
-        </select>
+        <input type="range" style="width:100%;accent-color:var(--m2);" id="sortSpeedSlider" min="1" max="100" value="50" oninput="onSpeedSliderChange(this.value)">
+        <div class="flex justify-between mt-2">
+          <span class="text-xs text-dimmer">Slow</span>
+          <span class="text-xs font-mono" id="sortSpeedLabel">Medium</span>
+          <span class="text-xs text-dimmer">Fast</span>
+        </div>
       </div>
 
       <div class="sidebar-section">
@@ -901,8 +982,13 @@ svg.avg-svg{position:absolute;inset:0;width:100%;height:100%;}
       </div>
 
       <div class="sidebar-divider"></div>
+      <!-- Play/Pause/Step controls -->
       <div style="display:flex;flex-direction:column;gap:8px;">
-        <button class="btn btn-m2" onclick="startSortAnimation()">▶ Animate Sort</button>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
+          <button class="btn btn-m2" id="btnPlay" onclick="playSortAnimation()" style="padding:10px 6px;font-size:12px;">▶ Play</button>
+          <button class="btn btn-ghost" id="btnPause" onclick="pauseSortAnimation()" style="padding:10px 6px;font-size:12px;" disabled>⏸ Pause</button>
+          <button class="btn btn-ghost" id="btnStep" onclick="stepSortAnimation()" style="padding:10px 6px;font-size:12px;" disabled>⏭ Step</button>
+        </div>
         <button class="btn btn-ghost" onclick="resetSort()">↺ Reset</button>
         <button class="btn btn-ghost" onclick="runSortBenchmark()">📊 Run Benchmark</button>
       </div>
@@ -918,12 +1004,24 @@ svg.avg-svg{position:absolute;inset:0;width:100%;height:100%;}
     </aside>
 
     <div class="module-main">
+      <!-- Step explanation panel -->
+      <div id="sortStepPanel" class="step-panel info mb-4">
+        <div class="step-panel-icon">📊</div>
+        <div class="step-panel-body">
+          <div class="step-panel-title">Ready</div>
+          <div class="step-panel-text" id="sortStepText">Press <span class="hi">▶ Play</span> to start Merge Sort animation. Use <span class="hi">⏸ Pause</span> to freeze, then <span class="hi">⏭ Step</span> to advance one comparison at a time.</div>
+        </div>
+      </div>
+
       <div class="card m2 mb-4">
         <div class="flex items-center justify-between mb-3">
           <div class="panel-title">Merge Sort Visualizer</div>
-          <span class="tag tag-m2">O(n log n)</span>
+          <span class="tag tag-m2" id="sortStatusTag">O(n log n)</span>
         </div>
-        <div class="sort-viz-container" id="sortViz" style="height:220px;"></div>
+        <div style="position:relative;">
+          <div class="sort-viz-container" id="sortViz" style="height:220px;"></div>
+          <div class="sort-paused-overlay" id="sortPausedOverlay">⏸ Paused — click Step to advance</div>
+        </div>
         <div class="flex gap-3 mt-3" style="font-size:11px;font-family:'Space Mono',monospace;">
           <span style="display:flex;align-items:center;gap:5px;"><span style="width:12px;height:12px;border-radius:3px;background:rgba(255,107,107,0.7);display:inline-block;"></span>Unsorted</span>
           <span style="display:flex;align-items:center;gap:5px;"><span style="width:12px;height:12px;border-radius:3px;background:#fff;box-shadow:0 0 6px rgba(255,255,255,0.6);display:inline-block;"></span>Comparing</span>
@@ -942,6 +1040,14 @@ svg.avg-svg{position:absolute;inset:0;width:100%;height:100%;}
             <thead><tr><th>Array Size (n)</th><th>Actual Time (ms)</th><th>Theoretical O(n log n)</th><th>Ratio</th></tr></thead>
             <tbody id="benchTableBody"></tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- Sort Summary -->
+      <div id="sortSummary" style="display:none;">
+        <div class="summary-panel">
+          <div class="summary-panel-title"><span style="color:var(--m2);">📊</span> Sort Run Summary</div>
+          <div class="summary-grid" id="sortSummaryGrid"></div>
         </div>
       </div>
     </div>
@@ -995,6 +1101,15 @@ svg.avg-svg{position:absolute;inset:0;width:100%;height:100%;}
     </aside>
 
     <div class="module-main">
+      <!-- Matrix step panel -->
+      <div id="matStepPanel" class="step-panel info mb-4">
+        <div class="step-panel-icon">🔢</div>
+        <div class="step-panel-body">
+          <div class="step-panel-title">Ready</div>
+          <div class="step-panel-text" id="matStepText">Click <span class="hi-green">▶ Run Comparison</span> to compute A×B and watch each result cell being filled in with row·column dot products highlighted.</div>
+        </div>
+      </div>
+
       <div class="grid-2 mb-4">
         <div class="card m3">
           <div class="sidebar-label mb-2">Standard O(n³)</div>
@@ -1012,13 +1127,13 @@ svg.avg-svg{position:absolute;inset:0;width:100%;height:100%;}
             <div style="font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:var(--m3);" id="strasOps">—</div>
             <div>
               <div class="tag tag-m3" style="margin-bottom:4px;">n^2.807</div>
-              <div class="text-xs text-dimmer" id="strasTime">— ms</div>
+              <div class="text-xs text-dimmer" id="strasTime">— ms (est)</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Matrix visualisation (small n only) -->
+      <!-- Matrix visualisation -->
       <div class="card m3 mb-4" id="matVisCard">
         <div class="flex items-center justify-between mb-3">
           <div class="panel-title">Matrix Visualisation</div>
@@ -1026,7 +1141,6 @@ svg.avg-svg{position:absolute;inset:0;width:100%;height:100%;}
             <span class="tag tag-m3">n ≤ 8 animated</span>
           </div>
         </div>
-        <!-- Row/Col legend -->
         <div style="display:flex;gap:12px;margin-bottom:10px;font-size:11px;font-family:'Space Mono',monospace;">
           <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:2px;background:rgba(91,141,255,0.35);display:inline-block;border:1px solid rgba(91,141,255,0.5);"></span>Row (A)</span>
           <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:2px;background:rgba(255,107,107,0.3);display:inline-block;border:1px solid rgba(255,107,107,0.5);"></span>Column (B)</span>
@@ -1051,12 +1165,20 @@ svg.avg-svg{position:absolute;inset:0;width:100%;height:100%;}
       </div>
 
       <!-- Chart -->
-      <div class="card m3">
+      <div class="card m3 mb-4">
         <div class="flex items-center justify-between mb-3">
           <div class="panel-title">Operation Count vs Matrix Size</div>
           <span class="tag tag-m3">Log scale</span>
         </div>
         <canvas class="chart" id="matChart" height="200"></canvas>
+      </div>
+
+      <!-- Matrix Summary -->
+      <div id="matSummary" style="display:none;">
+        <div class="summary-panel">
+          <div class="summary-panel-title"><span style="color:var(--m3);">📊</span> Matrix Comparison Summary</div>
+          <div class="summary-grid" id="matSummaryGrid"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -1110,6 +1232,15 @@ svg.avg-svg{position:absolute;inset:0;width:100%;height:100%;}
     </aside>
 
     <div class="module-main">
+      <!-- Amortized step panel -->
+      <div id="amortStepPanel" class="step-panel info mb-4">
+        <div class="step-panel-icon">📦</div>
+        <div class="step-panel-body">
+          <div class="step-panel-title">How amortized analysis works</div>
+          <div class="step-panel-text" id="amortStepText">Most insertions cost <span class="hi-green">O(1)</span>. Occasionally, when the array is full, it <span class="hi-red">doubles in capacity</span> (cost = n). But averaged over all ops, the cost converges to <span class="hi-yellow">O(1) amortized</span>.</div>
+        </div>
+      </div>
+
       <!-- Array display -->
       <div class="card m4 mb-4">
         <div class="flex items-center justify-between mb-3">
@@ -1136,13 +1267,21 @@ svg.avg-svg{position:absolute;inset:0;width:100%;height:100%;}
       </div>
 
       <!-- Operation log -->
-      <div class="card m4">
+      <div class="card m4 mb-4">
         <div class="flex items-center justify-between mb-3">
           <div class="panel-title">Operation Log</div>
           <span class="tag tag-m4">Last 30 ops</span>
         </div>
         <div class="op-log" id="opLog">
           <div style="color:var(--text3);font-size:12px;padding:8px;">Insert elements to see the log...</div>
+        </div>
+      </div>
+
+      <!-- Amortized Summary -->
+      <div id="amortSummary" style="display:none;">
+        <div class="summary-panel">
+          <div class="summary-panel-title"><span style="color:var(--m4);">📊</span> Amortized Analysis Summary</div>
+          <div class="summary-grid" id="amortSummaryGrid"></div>
         </div>
       </div>
     </div>
@@ -1173,6 +1312,30 @@ function toast(msg,dur=3000){
   const t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('show');
   clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),dur);
+}
+
+// ─── Step Panel Helper ───────────────────────────
+function setStepPanel(panelId,type,title,html){
+  const panel=document.getElementById(panelId);
+  if(!panel) return;
+  panel.className=`step-panel ${type} mb-4`;
+  const icons={info:'💡',compare:'🔍',merge:'🔀',resize:'⚡',done:'✅',tree:'🌳',matrix:'🔢'};
+  panel.querySelector('.step-panel-icon').textContent=icons[type]||'💡';
+  panel.querySelector('.step-panel-title').textContent=title;
+  panel.querySelector('.step-panel-text').innerHTML=html;
+}
+
+// ─── Summary Panel Helper ────────────────────────
+function showSummary(containerId,gridId,items,color){
+  const container=document.getElementById(containerId);
+  const grid=document.getElementById(gridId);
+  if(!container||!grid) return;
+  container.style.display='block';
+  grid.innerHTML=items.map(item=>`
+    <div class="summary-item">
+      <div class="summary-item-label">${item.label}</div>
+      <div class="summary-item-val" style="color:${color}">${item.val}</div>
+    </div>`).join('');
 }
 
 // ═══════════════════════════════════════════════════
@@ -1253,6 +1416,26 @@ function solveRecurrence(){
   renderTree(a,b,fn);
   renderSubst(a,b,fn,theta);
   renderAllMethods(a,b,fn,logba,caseNum,theta);
+
+  // Update step panel
+  const caseDescriptions={
+    1:`f(n) = ${fnL} grows <span class="hi">slower</span> than n^log_${b}(${a}) = n^${logba.toFixed(2)} → the leaves dominate.`,
+    2:`f(n) = ${fnL} and n^log_${b}(${a}) = n^${logba.toFixed(2)} grow at the <span class="hi">same rate</span> → multiply by log n.`,
+    3:`f(n) = ${fnL} grows <span class="hi">faster</span> than n^log_${b}(${a}) = n^${logba.toFixed(2)} → the root dominates.`
+  };
+  setStepPanel('recStepPanel','info',`Master Method — Case ${caseNum}`,
+    `T(n) = ${a}T(n/${b}) + ${fnL}. ${caseDescriptions[caseNum]} Result: <span class="hi">${theta}</span>`);
+
+  // Summary
+  const levels=`log_${b}(n) ≈ ${(Math.log(100)/Math.log(b)).toFixed(1)} for n=100`;
+  showSummary('recSummary','recSummaryGrid',[
+    {label:'Time Complexity', val:theta},
+    {label:'Master Case', val:`Case ${caseNum}`},
+    {label:'log_b(a)', val:logba.toFixed(4)},
+    {label:'f(n)', val:fnL},
+    {label:'Tree Depth', val:levels},
+    {label:'Leaves', val:`n^${logba.toFixed(2)}`}
+  ],'var(--m1)');
 }
 
 function renderMasterSteps(a,b,fn,logba,caseNum,theta){
@@ -1283,7 +1466,6 @@ function renderMasterSteps(a,b,fn,logba,caseNum,theta){
     </div></div>`;
 }
 
-// ── ENHANCED RECURRENCE TREE (animated, staggered) ──
 function renderTree(a,b,fn){
   const svg=document.getElementById('treeSvg');
   const W=700,H=300;
@@ -1294,14 +1476,13 @@ function renderTree(a,b,fn){
   const nodeR=20;
   const fnCosts=['f(n)','f(n/'+b+')','f(n/'+b+'²)','f(n/'+b+'³)'];
 
-  // Build node positions first
-  const nodes=[];// {x,y,level,index}
-  const edges=[];// {x1,y1,x2,y2}
+  const nodes=[];
+  const edges=[];
   const yStep=68;
   const startY=30;
 
   for(let level=0;level<levels;level++){
-    const count=Math.min(Math.pow(a,level),10);// cap display at 10
+    const count=Math.min(Math.pow(a,level),10);
     const spacing=Math.min(78,560/Math.max(1,count));
     const startX=W/2-(count-1)*spacing/2;
     for(let i=0;i<count;i++){
@@ -1311,7 +1492,6 @@ function renderTree(a,b,fn){
     }
   }
 
-  // Edges
   for(let level=1;level<levels;level++){
     const curCount=Math.min(Math.pow(a,level),10);
     const parCount=Math.min(Math.pow(a,level-1),10);
@@ -1329,7 +1509,6 @@ function renderTree(a,b,fn){
     }
   }
 
-  // Draw edges with stagger
   edges.forEach(e=>{
     const line=document.createElementNS('http://www.w3.org/2000/svg','line');
     line.setAttribute('x1',e.x1);line.setAttribute('y1',e.y1);
@@ -1342,7 +1521,6 @@ function renderTree(a,b,fn){
     svg.appendChild(line);
   });
 
-  // Draw nodes with stagger
   nodes.forEach((n,ni)=>{
     const delay=n.level*100+n.index*25;
     const g=document.createElementNS('http://www.w3.org/2000/svg','g');
@@ -1367,7 +1545,6 @@ function renderTree(a,b,fn){
     svg.appendChild(g);
   });
 
-  // Cost annotations (right side)
   for(let level=0;level<levels;level++){
     const y=startY+level*yStep;
     const count=Math.min(Math.pow(a,level),10);
@@ -1384,7 +1561,6 @@ function renderTree(a,b,fn){
     costText.textContent=`${fnCosts[level]||'...'} × ${count}`;
     costG.appendChild(costText);
 
-    // Horizontal guide line
     const guide=document.createElementNS('http://www.w3.org/2000/svg','line');
     guide.setAttribute('x1',W-130);guide.setAttribute('y1',y);
     guide.setAttribute('x2',W-10);guide.setAttribute('y2',y);
@@ -1395,7 +1571,6 @@ function renderTree(a,b,fn){
     svg.appendChild(costG);
   }
 
-  // Leaves row label
   const leafY=startY+levels*yStep;
   if(leafY<H-20){
     const leafText=document.createElementNS('http://www.w3.org/2000/svg','text');
@@ -1490,9 +1665,29 @@ function showMethod(id,btn){
 function initM1(){ solveRecurrence(); }
 
 // ═══════════════════════════════════════════════════
-// MODULE 2 — SORTING BENCHMARK (enhanced)
+// MODULE 2 — SORTING BENCHMARK (Play/Pause/Step + smooth animation)
 // ═══════════════════════════════════════════════════
-let sortArr=[];let sortAnimating=false;let sortComps=0;let sortMerges=0;
+let sortArr=[];
+let sortAnimating=false;
+let sortPaused=false;
+let sortCompsCount=0;
+let sortMergesCount=0;
+let sortSpeedMs=60; // ms per step
+
+// Step-by-step queue for pause/step functionality
+let sortStepQueue=[];   // array of step objects
+let sortStepIndex=0;
+let sortStepTimer=null;
+
+function onSpeedSliderChange(v){
+  const val=parseInt(v);
+  // Map 1-100 slider to ~500ms (slow) down to ~2ms (fast)
+  sortSpeedMs=Math.round(500*Math.pow(0.02,val/100));
+  const labels=['Slow','Medium','Fast','Lightning'];
+  const idx=val<25?0:val<55?1:val<85?2:3;
+  document.getElementById('sortSpeedLabel').textContent=labels[idx];
+  // If currently animating, speed change takes effect on next step automatically
+}
 
 function generateArray(size,pattern='random'){
   let arr=Array.from({length:size},(_,i)=>i+1);
@@ -1503,23 +1698,48 @@ function generateArray(size,pattern='random'){
 }
 
 function initM2(){
+  stopSortAnimation();
   const size=parseInt(document.getElementById('sortSizeSlider').value)||40;
   sortArr=generateArray(size,document.getElementById('sortPattern').value);
-  renderSortBars(sortArr,[]);
-  sortComps=0;sortMerges=0;
+  renderSortBars(sortArr,[],[]);
+  sortCompsCount=0;sortMergesCount=0;
   document.getElementById('sortComps').textContent='0';
   document.getElementById('sortSwaps').textContent='0';
   drawSortChart([],[],[]);
+  document.getElementById('sortSummary').style.display='none';
+  document.getElementById('sortViz').classList.remove('sorting','sorted');
+  setSortButtons('idle');
+  document.getElementById('sortPausedOverlay').classList.remove('visible');
+  setStepPanel('sortStepPanel','info','Ready',
+    'Press <span class="hi">▶ Play</span> to start. Use <span class="hi">⏸ Pause</span> to freeze, then <span class="hi">⏭ Step</span> to advance one comparison at a time.');
+}
+
+function setSortButtons(state){
+  const btnPlay=document.getElementById('btnPlay');
+  const btnPause=document.getElementById('btnPause');
+  const btnStep=document.getElementById('btnStep');
+  if(state==='idle'){
+    btnPlay.textContent='▶ Play';btnPlay.disabled=false;
+    btnPause.disabled=true;btnStep.disabled=true;
+  } else if(state==='playing'){
+    btnPlay.textContent='▶ Play';btnPlay.disabled=true;
+    btnPause.disabled=false;btnStep.disabled=false;
+  } else if(state==='paused'){
+    btnPlay.textContent='▶ Resume';btnPlay.disabled=false;
+    btnPause.disabled=true;btnStep.disabled=false;
+  } else if(state==='done'){
+    btnPlay.textContent='▶ Play';btnPlay.disabled=false;
+    btnPause.disabled=true;btnStep.disabled=true;
+  }
 }
 
 function renderSortBars(arr,greenSet,whiteSet=[]){
   const el=document.getElementById('sortViz');
   const max=Math.max(...arr);
-  // Reuse existing bars for smoother transitions
   const existing=el.querySelectorAll('.sort-bar');
   if(existing.length!==arr.length){
     el.innerHTML='';
-    arr.forEach((_,i)=>{
+    arr.forEach(()=>{
       const bar=document.createElement('div');
       bar.className='sort-bar bar-normal';
       el.appendChild(bar);
@@ -1530,7 +1750,8 @@ function renderSortBars(arr,greenSet,whiteSet=[]){
     const bar=bars[i];
     const h=Math.round((v/max)*190)+6;
     bar.style.height=h+'px';
-    if(greenSet instanceof Set ? greenSet.has(i) : greenSet.includes(i)){
+    const isGreen=greenSet instanceof Set ? greenSet.has(i) : greenSet.includes(i);
+    if(isGreen){
       bar.className='sort-bar bar-sorted';
     } else if(whiteSet.includes(i)){
       bar.className='sort-bar bar-comparing';
@@ -1540,65 +1761,162 @@ function renderSortBars(arr,greenSet,whiteSet=[]){
   });
 }
 
-function resetSort(){sortAnimating=false;initM2();}
+function stopSortAnimation(){
+  sortAnimating=false;sortPaused=false;
+  if(sortStepTimer){clearTimeout(sortStepTimer);sortStepTimer=null;}
+  sortStepQueue=[];sortStepIndex=0;
+}
 
-async function startSortAnimation(){
-  if(sortAnimating){sortAnimating=false;return;}
-  const size=parseInt(document.getElementById('sortSizeSlider').value)||40;
-  sortArr=generateArray(size,document.getElementById('sortPattern').value);
-  sortComps=0;sortMerges=0;sortAnimating=true;
-  const speed=parseInt(document.getElementById('sortSpeed').value)||60;
+function resetSort(){stopSortAnimation();initM2();}
+
+// Build the full list of sort steps upfront (so we can step through them)
+function buildMergeSortSteps(arr){
+  const steps=[];
   const sorted=new Set();
-  const arr=[...sortArr];
-  const delay=ms=>new Promise(r=>setTimeout(r,ms));
+  const a=[...arr];
 
-  const update=(a,comparing=[],sortedExtra=[])=>{
-    if(!sortAnimating) return;
-    // Merge current sorted set with any new sorted indices
-    const allSorted=new Set([...sorted,...sortedExtra]);
-    renderSortBars(a,allSorted,comparing);
-    document.getElementById('sortComps').textContent=sortComps;
-    document.getElementById('sortSwaps').textContent=sortMerges;
-  };
-
-  async function merge(arr,l,m,r){
+  function merge(arr,l,m,r){
     const left=arr.slice(l,m+1),right=arr.slice(m+1,r+1);
     let i=0,j=0,k=l;
     while(i<left.length&&j<right.length){
-      if(!sortAnimating) return;
-      sortComps++;
-      // Highlight the two elements being compared
-      update(arr,[l+i,m+1+j]);
-      await delay(speed);
+      steps.push({type:'compare',arr:[...arr],compare:[l+i,m+1+j],sorted:new Set(sorted)});
       if(left[i]<=right[j]) arr[k++]=left[i++];
       else arr[k++]=right[j++];
-      sortMerges++;
-      update(arr,[k-1]);
-      await delay(Math.max(4,speed*0.4));
+      steps.push({type:'merge',arr:[...arr],compare:[k-1],sorted:new Set(sorted)});
     }
     while(i<left.length){arr[k++]=left[i++];}
     while(j<right.length){arr[k++]=right[j++];}
-    // Mark merged segment as sorted
     for(let x=l;x<=r;x++) sorted.add(x);
-    update(arr,[]);
-    await delay(Math.max(4,speed*0.3));
+    steps.push({type:'segment_done',arr:[...arr],compare:[],sorted:new Set(sorted)});
   }
 
-  async function mergeSort(arr,l,r){
-    if(!sortAnimating) return;
+  function mergeSort(arr,l,r){
     if(l<r){
       const m=Math.floor((l+r)/2);
-      await mergeSort(arr,l,m);
-      await mergeSort(arr,m+1,r);
-      await merge(arr,l,m,r);
+      mergeSort(arr,l,m);
+      mergeSort(arr,m+1,r);
+      merge(arr,l,m,r);
+    } else {
+      sorted.add(l);
     }
   }
-  await mergeSort(arr,0,arr.length-1);
-  if(sortAnimating){
-    renderSortBars(arr,new Set([...Array(arr.length).keys()]));
-    toast('✓ Sort complete!');
-    sortAnimating=false;
+  mergeSort(a,0,a.length-1);
+  steps.push({type:'done',arr:[...a],compare:[],sorted:new Set([...Array(a.length).keys()])});
+  return steps;
+}
+
+async function playSortAnimation(){
+  if(sortPaused){
+    // Resume
+    sortPaused=false;
+    document.getElementById('sortPausedOverlay').classList.remove('visible');
+    setSortButtons('playing');
+    setStepPanel('sortStepPanel','compare','Resuming...','Merge Sort continuing from where it left off.');
+    runSortSteps();
+    return;
   }
+  if(sortAnimating) return;
+
+  // Fresh start
+  stopSortAnimation();
+  const size=parseInt(document.getElementById('sortSizeSlider').value)||40;
+  sortArr=generateArray(size,document.getElementById('sortPattern').value);
+  sortCompsCount=0;sortMergesCount=0;
+  sortStepQueue=buildMergeSortSteps(sortArr);
+  sortStepIndex=0;
+  sortAnimating=true;
+  document.getElementById('sortViz').classList.add('sorting');
+  setSortButtons('playing');
+  runSortSteps();
+}
+
+function runSortSteps(){
+  if(!sortAnimating||sortPaused) return;
+  if(sortStepIndex>=sortStepQueue.length){
+    finishSort();return;
+  }
+  applyStep(sortStepQueue[sortStepIndex]);
+  sortStepIndex++;
+  if(sortStepIndex>=sortStepQueue.length){
+    sortStepTimer=setTimeout(finishSort, sortSpeedMs*2);
+  } else {
+    sortStepTimer=setTimeout(runSortSteps, sortSpeedMs);
+  }
+}
+
+function applyStep(step){
+  if(!step) return;
+  if(step.type==='compare'){
+    sortCompsCount++;
+    document.getElementById('sortComps').textContent=sortCompsCount;
+    renderSortBars(step.arr,step.sorted,step.compare);
+    const [i,j]=step.compare;
+    setStepPanel('sortStepPanel','compare','Comparing',
+      `Comparing indices <span class="hi">[${i}]</span> and <span class="hi">[${j}]</span>. Value ${step.arr[i]} vs ${step.arr[j]}. ${step.arr[i]<=step.arr[j]?'<span class="hi-green">Left ≤ Right — take left.</span>':'<span class="hi-red">Left > Right — take right.</span>'}`);
+  } else if(step.type==='merge'){
+    sortMergesCount++;
+    document.getElementById('sortSwaps').textContent=sortMergesCount;
+    renderSortBars(step.arr,step.sorted,step.compare);
+    setStepPanel('sortStepPanel','merge','Merging',
+      `Placed element into merged array. <span class="hi-green">${step.sorted.size} elements</span> sorted so far.`);
+  } else if(step.type==='segment_done'){
+    renderSortBars(step.arr,step.sorted,[]);
+    setStepPanel('sortStepPanel','merge','Segment merged',
+      `A sub-array segment is now fully merged. <span class="hi-green">${step.sorted.size} / ${step.arr.length}</span> elements in final position.`);
+  }
+}
+
+function pauseSortAnimation(){
+  if(!sortAnimating||sortPaused) return;
+  sortPaused=true;
+  if(sortStepTimer){clearTimeout(sortStepTimer);sortStepTimer=null;}
+  document.getElementById('sortPausedOverlay').classList.add('visible');
+  setSortButtons('paused');
+  setStepPanel('sortStepPanel','info','Paused',
+    `At step <span class="hi">${sortStepIndex}</span> of ${sortStepQueue.length}. Click <span class="hi">▶ Resume</span> or <span class="hi">⏭ Step</span> to advance one comparison.`);
+}
+
+function stepSortAnimation(){
+  if(!sortAnimating) return;
+  if(!sortPaused){
+    sortPaused=true;
+    if(sortStepTimer){clearTimeout(sortStepTimer);sortStepTimer=null;}
+    document.getElementById('sortPausedOverlay').classList.add('visible');
+    setSortButtons('paused');
+  }
+  if(sortStepIndex>=sortStepQueue.length){finishSort();return;}
+  applyStep(sortStepQueue[sortStepIndex]);
+  sortStepIndex++;
+  if(sortStepIndex>=sortStepQueue.length){
+    setTimeout(finishSort,300);
+  }
+}
+
+function finishSort(){
+  sortAnimating=false;sortPaused=false;
+  if(sortStepTimer){clearTimeout(sortStepTimer);sortStepTimer=null;}
+  document.getElementById('sortViz').classList.remove('sorting');
+  document.getElementById('sortViz').classList.add('sorted');
+  document.getElementById('sortPausedOverlay').classList.remove('visible');
+  const allSorted=new Set([...Array(sortArr.length).keys()]);
+  renderSortBars(sortStepQueue.length>0?sortStepQueue[sortStepQueue.length-1].arr:sortArr,allSorted,[]);
+  setSortButtons('done');
+  document.getElementById('sortStatusTag').textContent='✓ Sorted!';
+  setStepPanel('sortStepPanel','done','Sort Complete!',
+    `Merge Sort finished. <span class="hi-green">${sortCompsCount} comparisons</span>, <span class="hi">${sortMergesCount} merge ops</span>. Time complexity confirmed: <span class="hi-green">O(n log n)</span>.`);
+  // Show summary
+  const n=sortArr.length;
+  const theoreticalOps=Math.round(n*Math.log2(n));
+  showSummary('sortSummary','sortSummaryGrid',[
+    {label:'Time Complexity', val:'O(n log n)'},
+    {label:'Array Size', val:n.toLocaleString()},
+    {label:'Comparisons', val:sortCompsCount.toLocaleString()},
+    {label:'Merge Ops', val:sortMergesCount.toLocaleString()},
+    {label:'Theoretical Ops', val:`~${theoreticalOps.toLocaleString()}`},
+    {label:'Ratio', val:(sortCompsCount/theoreticalOps).toFixed(2)+'×'}
+  ],'var(--m2)');
+  setTimeout(()=>{document.getElementById('sortStatusTag').textContent='O(n log n)';},3000);
+  toast('✓ Sort complete!');
 }
 
 async function runSortBenchmark(){
@@ -1661,7 +1979,7 @@ function drawSortChart(labels,actual,theoretical){
 }
 
 // ═══════════════════════════════════════════════════
-// MODULE 3 — MATRIX COMPARATOR (enhanced: row/col highlight + step-by-step)
+// MODULE 3 — MATRIX COMPARATOR
 // ═══════════════════════════════════════════════════
 let matAnimating=false;
 let matA_data=[],matB_data=[],matC_data=[];
@@ -1674,7 +1992,10 @@ function initM3(){
   renderMatrixCells(2,'matB',false,matB_data);
   renderMatrixCells(2,'matC',true,[]);
   document.getElementById('matStepInfo').textContent='';
+  document.getElementById('matSummary').style.display='none';
   drawMatChart([],[],[]);
+  setStepPanel('matStepPanel','info','Ready',
+    'Click <span class="hi-green">▶ Run Comparison</span> to compute A×B. For n≤8, watch each cell being filled with <span class="hi">row</span> and <span class="hi-red">column</span> highlighted.');
 }
 
 function renderMatrixCells(n,id,empty,dataStore){
@@ -1710,21 +2031,11 @@ function highlightRowCol(n,row,col,resultRow,resultCol){
   const aCells=getCells('matA');
   const bCells=getCells('matB');
   const cCells=getCells('matC');
-
-  // Clear all
   [...aCells,...bCells,...cCells].forEach(c=>{
     c.classList.remove('row-highlight','col-highlight','dot-active','computed');
   });
-
-  // Row in A (row=row, all cols)
-  for(let j=0;j<n;j++){
-    aCells[row*n+j].classList.add('row-highlight');
-  }
-  // Col in B (all rows, col=col)
-  for(let i=0;i<n;i++){
-    bCells[i*n+col].classList.add('col-highlight');
-  }
-  // Result cell being computed
+  for(let j=0;j<n;j++){aCells[row*n+j].classList.add('row-highlight');}
+  for(let i=0;i<n;i++){bCells[i*n+col].classList.add('col-highlight');}
   cCells[resultRow*n+resultCol].classList.add('dot-active');
 }
 
@@ -1742,7 +2053,6 @@ async function runMatrixComparison(){
   const showVis=n<=8;
   matAnimating=true;
 
-  // Generate matrices
   matA_data=[];matB_data=[];matC_data=new Array(n*n).fill(0);
   const A=Array.from({length:n},()=>Array.from({length:n},()=>Math.floor(Math.random()*range)));
   const B=Array.from({length:n},()=>Array.from({length:n},()=>Math.floor(Math.random()*range)));
@@ -1751,29 +2061,27 @@ async function runMatrixComparison(){
   if(showVis){
     renderMatrixCells(n,'matA',false,null);
     renderMatrixCells(n,'matB',false,null);
-    // Fill A and B cells with our data
     const aCells=getCells('matA');
     const bCells=getCells('matB');
     matA_data.forEach((v,i)=>{aCells[i].textContent=v;});
     matB_data.forEach((v,i)=>{bCells[i].textContent=v;});
-    // Set up C grid (empty)
     renderMatrixCells(n,'matC',true,null);
   }
 
-  // Standard O(n^3) timed
   const stdOps=n*n*n;
   const t0=performance.now();
   const C=Array.from({length:n},()=>Array(n).fill(0));
   for(let i=0;i<n;i++) for(let j=0;j<n;j++) for(let k=0;k<n;k++) C[i][j]+=A[i][k]*B[k][j];
   const t1=performance.now();
+  const stdTime=(t1-t0).toFixed(3);
 
   document.getElementById('stdOps').textContent=stdOps.toLocaleString();
-  document.getElementById('stdTime').textContent=(t1-t0).toFixed(3)+' ms';
+  document.getElementById('stdTime').textContent=stdTime+' ms';
   const strasOps=Math.round(Math.pow(n,Math.log2(7)));
+  const strasTime=((t1-t0)*0.7).toFixed(3);
   document.getElementById('strasOps').textContent=strasOps.toLocaleString();
-  document.getElementById('strasTime').textContent=((t1-t0)*0.7).toFixed(3)+' ms (est)';
+  document.getElementById('strasTime').textContent=strasTime+' ms (est)';
 
-  // Animate result computation cell by cell
   if(showVis){
     const cCells=getCells('matC');
     const stepDelay=Math.max(30,Math.min(300,800/(n*n)));
@@ -1783,6 +2091,8 @@ async function runMatrixComparison(){
         highlightRowCol(n,i,j,i,j);
         document.getElementById('matStepInfo').textContent=
           `Computing C[${i}][${j}] = row ${i} of A · col ${j} of B`;
+        setStepPanel('matStepPanel','matrix',`Computing C[${i}][${j}]`,
+          `Taking <span class="hi">row ${i}</span> of A × <span class="hi-red">col ${j}</span> of B. Summing ${n} multiply-add operations → result = <span class="hi-yellow">${C[i][j]}</span>`);
         await new Promise(r=>setTimeout(r,stepDelay));
         cCells[i*n+j].textContent=C[i][j];
         cCells[i*n+j].classList.remove('dot-active');
@@ -1791,11 +2101,25 @@ async function runMatrixComparison(){
       }
     }
     clearHighlights();
-    // Mark all as computed
     cCells.forEach(c=>{c.classList.remove('result-pop');c.classList.add('computed');});
     document.getElementById('matStepInfo').textContent=
       `✓ All ${n}×${n} = ${n*n} result cells computed (${stdOps.toLocaleString()} multiply-add ops)`;
   }
+
+  setStepPanel('matStepPanel','done',`n=${n} complete`,
+    `Standard: <span class="hi">${stdOps.toLocaleString()} ops</span> in ${stdTime}ms. Strassen: <span class="hi-green">~${strasOps.toLocaleString()} ops</span> (est). Strassen saves ${((1-strasOps/stdOps)*100).toFixed(1)}%.`);
+
+  // Show summary
+  const savings=((1-strasOps/stdOps)*100).toFixed(1);
+  showSummary('matSummary','matSummaryGrid',[
+    {label:'Standard Ops', val:stdOps.toLocaleString()},
+    {label:'Strassen Ops', val:strasOps.toLocaleString()},
+    {label:'Standard Time', val:stdTime+'ms'},
+    {label:'Strassen Est.', val:strasTime+'ms'},
+    {label:'Ops Saved', val:savings+'%'},
+    {label:'Winner', val:strasOps<stdOps?'Strassen':'Standard'}
+  ],'var(--m3)');
+
   matAnimating=false;
   toast(`✓ n=${n}: Standard=${stdOps.toLocaleString()} ops, Strassen≈${strasOps.toLocaleString()} ops`);
 }
@@ -1862,17 +2186,18 @@ function drawMatChart(labels,std,stras){
 }
 
 // ═══════════════════════════════════════════════════
-// MODULE 4 — AMORTIZED ANALYSIS (enhanced animations)
+// MODULE 4 — AMORTIZED ANALYSIS
 // ═══════════════════════════════════════════════════
 let amortState={n:0,cap:1,arr:[],totalCost:0,resizes:0,opLog:[],avgHistory:[]};
 let amortTimer=null;
-let lastWasResize=false;
 
 function initM4(){
   const cap=parseInt(document.getElementById('amortStartCap').value)||1;
   amortState={n:0,cap,arr:new Array(cap).fill(null),totalCost:0,resizes:0,opLog:[],avgHistory:[]};
-  lastWasResize=false;
   renderAmort(false,false);
+  document.getElementById('amortSummary').style.display='none';
+  setStepPanel('amortStepPanel','info','How amortized analysis works',
+    'Most insertions cost <span class="hi-green">O(1)</span>. Occasionally, when the array is full, it <span class="hi-red">doubles in capacity</span>. But averaged over all ops, the cost converges to <span class="hi-yellow">O(1) amortized</span>.');
 }
 
 function renderAmort(wasResize=false,isNew=false){
@@ -1886,7 +2211,6 @@ function renderAmort(wasResize=false,isNew=false){
   const MAX_SHOW=60;
   const showCap=Math.min(s.cap,MAX_SHOW);
 
-  // Resize flash on container
   if(wasResize){
     el.classList.add('resize-flash');
     setTimeout(()=>el.classList.remove('resize-flash'),500);
@@ -1898,12 +2222,10 @@ function renderAmort(wasResize=false,isNew=false){
     cell.className='array-cell';
     if(i<s.n){
       if(wasResize && i<s.n-1){
-        // All old elements being "copied" in
         cell.classList.add('cell-resize');
         cell.style.animationDelay=(i*12)+'ms';
         cell.textContent=i+1;
       } else if(i===s.n-1&&isNew){
-        // The brand new element
         cell.classList.add('cell-new');
         cell.textContent=s.n;
       } else {
@@ -1922,14 +2244,13 @@ function renderAmort(wasResize=false,isNew=false){
     el.appendChild(d);
   }
 
-  // Log
   const logEl=document.getElementById('opLog');
   if(s.opLog.length===0){
     logEl.innerHTML='<div style="color:var(--text3);font-size:12px;padding:8px;">Insert elements to see the log...</div>';
     drawAvgChart();return;
   }
-  logEl.innerHTML=s.opLog.slice(-30).reverse().map((op,idx)=>`
-    <div class="op-entry ${op.expensive?'op-expensive':'op-cheap'}" style="animation-delay:${idx===0?'0':''}ms">
+  logEl.innerHTML=s.opLog.slice(-30).reverse().map((op)=>`
+    <div class="op-entry ${op.expensive?'op-expensive':'op-cheap'}">
       <span class="op-cost" style="color:${op.expensive?'var(--m2)':'var(--m3)'}">${op.cost}</span>
       <span style="color:${op.expensive?'var(--m2b)':'var(--m3b)'}">Insert #${op.i}</span>
       ${op.expensive?`<span style="color:var(--m2);margin-left:4px;font-size:10px;">⚡ RESIZE → cap=${op.newCap}</span>`:'<span style="color:var(--text3);margin-left:4px;">O(1)</span>'}
@@ -1949,7 +2270,6 @@ function drawAvgChart(){
   const cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;
   const maxV=Math.max(...data,4);
 
-  // Y-axis grid lines
   for(let i=0;i<=4;i++){
     const yy=pad.t+i*(cH/4);
     const gl=document.createElementNS('http://www.w3.org/2000/svg','line');
@@ -1963,7 +2283,6 @@ function drawAvgChart(){
     svg.appendChild(gt);
   }
 
-  // Amortized O(1) reference line at y≈3
   const refV=3;
   const refY=pad.t+cH-(refV/maxV)*cH;
   const refLine=document.createElementNS('http://www.w3.org/2000/svg','line');
@@ -1975,7 +2294,6 @@ function drawAvgChart(){
   refT.setAttribute('fill','rgba(244,196,48,0.5)');refT.setAttribute('font-size','9');refT.setAttribute('font-family','Space Mono,monospace');
   refT.textContent='amortized O(1)';svg.appendChild(refT);
 
-  // Area fill under the curve
   const ptsList=data.map((v,i)=>{
     const x=pad.l+i*(cW/(data.length-1||1));
     const y=pad.t+cH-(v/maxV)*cH;
@@ -1989,7 +2307,6 @@ function drawAvgChart(){
   area.setAttribute('fill','rgba(244,196,48,0.06)');
   svg.appendChild(area);
 
-  // Resize event markers (vertical lines where cost spikes)
   amortState.opLog.forEach(op=>{
     if(op.expensive){
       const xi=op.i-1;
@@ -2005,7 +2322,6 @@ function drawAvgChart(){
     }
   });
 
-  // Main line
   const pts=ptsList.map(p=>`${p.x},${p.y}`).join(' ');
   const pl=document.createElementNS('http://www.w3.org/2000/svg','polyline');
   pl.setAttribute('points',pts);pl.setAttribute('fill','none');
@@ -2013,7 +2329,6 @@ function drawAvgChart(){
   pl.setAttribute('stroke-linejoin','round');
   svg.appendChild(pl);
 
-  // Current point dot
   const last=ptsList[ptsList.length-1];
   const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
   dot.setAttribute('cx',last.x);dot.setAttribute('cy',last.y);dot.setAttribute('r','4');
@@ -2037,14 +2352,31 @@ function insertOne(){
   s.opLog.push({i:s.n,cost,expensive,newCap});
   s.avgHistory.push(parseFloat((s.totalCost/s.n).toFixed(3)));
 
+  const avg=(s.totalCost/s.n).toFixed(3);
   if(expensive){
     document.getElementById('amortMsg').innerHTML=
       `<span class="cap-badge">⚡ Resize! Copied ${s.n-1} elements. Cost = ${cost}. New cap = ${newCap}</span>`;
+    setStepPanel('amortStepPanel','resize',`Resize! Insert #${s.n}`,
+      `Array was full (cap=${newCap/2}). <span class="hi-red">Allocated new array (cap=${newCap})</span> and copied ${s.n-1} elements. Cost = <span class="hi-red">${cost}</span>. Running avg = <span class="hi-yellow">${avg}</span>.`);
   } else {
     document.getElementById('amortMsg').innerHTML=
-      `<span style="color:var(--m3);font-size:11px;">✓ Insert #${s.n} — cost 1. Running avg = ${(s.totalCost/s.n).toFixed(3)}</span>`;
+      `<span style="color:var(--m3);font-size:11px;">✓ Insert #${s.n} — cost 1. Running avg = ${avg}</span>`;
+    setStepPanel('amortStepPanel','merge',`Insert #${s.n} — O(1)`,
+      `Array has space. Just placed value at index ${s.n-1}. Cost = <span class="hi-green">1</span>. Running average = <span class="hi-yellow">${avg}</span> (converging to O(1)).`);
   }
   renderAmort(expensive,true);
+
+  // Show/update summary after 10+ insertions
+  if(s.n>=10){
+    showSummary('amortSummary','amortSummaryGrid',[
+      {label:'Elements (n)', val:s.n},
+      {label:'Capacity', val:s.cap},
+      {label:'Total Cost', val:s.totalCost},
+      {label:'Resizes', val:s.resizes},
+      {label:'Avg Cost/Op', val:avg},
+      {label:'Amortized', val:'O(1) ✓'}
+    ],'var(--m4)');
+  }
 }
 
 function startAutoInsert(){
@@ -2071,6 +2403,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   initM2();
   initM3();
   initM4();
+  // Init speed slider display
+  onSpeedSliderChange(50);
 });
 </script>
 </body>
